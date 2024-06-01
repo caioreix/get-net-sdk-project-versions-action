@@ -96,3 +96,14 @@ Informational:
     assembly-version: 2.0.0
     file-version: 2.0.0
     informational-version: v2 beta
+
+WithEnv:
+  filename: with_env.xml
+  outputs:
+    version: 2.0.0-v.1
+    version-prefix: 2.0.0
+    version-suffix: v.1
+    package-version: 2.0.0-v.1
+    assembly-version: 2.0.0
+    file-version: 2.0.0
+    informational-version: 2.0.0-v.1

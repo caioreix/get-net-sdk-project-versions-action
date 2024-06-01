@@ -145,3 +145,19 @@ test('Informational', () => {
   )
 })
 
+test('WithEnv', () => {
+  const exec = run(getFilePath('with_env.xml'))
+  expect(exec.status).toStrictEqual(0)
+  expect(exec.stdout.split(os.EOL)).toEqual(
+    expect.arrayContaining([
+      '::set-output name=version::2.0.0-v.1',
+      '::set-output name=version-prefix::2.0.0',
+      '::set-output name=version-suffix::v.1',
+      '::set-output name=package-version::2.0.0-v.1',
+      '::set-output name=assembly-version::2.0.0',
+      '::set-output name=file-version::2.0.0',
+      '::set-output name=informational-version::2.0.0-v.1'
+    ])
+  )
+})
+

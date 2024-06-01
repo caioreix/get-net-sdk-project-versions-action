@@ -10,13 +10,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
       - run: npm install
       - run: npm run all
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
       - uses: ./
         id: Verson
         with:
@@ -142,4 +142,18 @@ jobs:
           test "${{steps.Informational.outputs.assembly-version}}" = "2.0.0" # assembly-version
           test "${{steps.Informational.outputs.file-version}}" = "2.0.0" # file-version
           test "${{steps.Informational.outputs.informational-version}}" = "v2 beta" # informational-version
+
+      - uses: ./
+        id: WithEnv
+        with:
+          proj-path: __tests__/testdata/with_env.xml
+      - name: check WithEnv
+        run: |
+          test "${{steps.WithEnv.outputs.version}}" = "2.0.0-v.1" # version
+          test "${{steps.WithEnv.outputs.version-prefix}}" = "2.0.0" # version-prefix
+          test "${{steps.WithEnv.outputs.version-suffix}}" = "v.1" # version-suffix
+          test "${{steps.WithEnv.outputs.package-version}}" = "2.0.0-v.1" # package-version
+          test "${{steps.WithEnv.outputs.assembly-version}}" = "2.0.0" # assembly-version
+          test "${{steps.WithEnv.outputs.file-version}}" = "2.0.0" # file-version
+          test "${{steps.WithEnv.outputs.informational-version}}" = "2.0.0-v.1" # informational-version
 

@@ -1,5 +1,6 @@
-import * as core from '@actions/core'
 import {promises as fs} from 'fs'
+
+import * as core from '@actions/core'
 import {DOMParser} from '@xmldom/xmldom'
 
 function put(name: string, value: string): void {
@@ -7,14 +8,42 @@ function put(name: string, value: string): void {
   core.setOutput(name, value)
 }
 
+const envRegex = /\$\((.*?)\)/
+
 class DocumentWrapper {
   private docElement: HTMLElement
   constructor(docElement: HTMLElement) {
     this.docElement = docElement
   }
   getLastText(tagName: string): string | null {
+    return this.getLastTextReplacing(tagName)
+  }
+
+  getLastTextRaw(tagName: string): string | null {
     const nodes = this.docElement.getElementsByTagName(tagName)
     return nodes.length > 0 ? nodes[nodes.length - 1].textContent : null
+  }
+
+  getLastTextReplacing(tagName: string): string | null {
+    let content = this.getLastTextRaw(tagName)
+
+    const resolveVariables = (text: string): string => {
+      return text.replace(envRegex, (match, p1) => {
+        const value = this.getLastTextRaw(p1)
+
+        if (!value) {
+          return match
+        }
+
+        return resolveVariables(value)
+      })
+    }
+
+    if (content) {
+      content = resolveVariables(content)
+    }
+
+    return content
   }
 
   static async createAsync(projPath: string): Promise<DocumentWrapper> {
